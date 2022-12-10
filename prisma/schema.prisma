@@ -43,3 +43,37 @@ model Books {
 
   @@map("books")
 }
+
+model CoursesMany {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  duration    Int
+  created_at  DateTime @default(now())
+
+  modules CoursesManyModules[]
+
+  @@map("courses_many")
+}
+
+model Modules {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String
+  created_at  DateTime @default(now())
+
+  courses CoursesManyModules[]
+
+  @@map("modules")
+}
+
+model CoursesManyModules {
+  id                 String      @id @default(uuid())
+  courses_many       CoursesMany @relation(fields: [fk_id_courses_many], references: [id])
+  fk_id_courses_many String
+  module             Modules     @relation(fields: [fk_id_module], references: [id])
+  fk_id_module       String
+  created_at         DateTime    @default(now())
+
+  @@map("courses_many_modules")
+}
